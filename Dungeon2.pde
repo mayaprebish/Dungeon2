@@ -18,8 +18,12 @@ PImage[] pWalkRight = new PImage[PWD];
 
 // Backgrounds
 PImage T, L, B, R, TL, TB, TR, LR, BL, BR, TLR, TBL, TBR, BLR, TBLR;
+ArrayList<ArrayList<Screen>> map = new ArrayList<ArrayList<Screen>>();
+JSONArray mapVals;
+int MAPDIM = 3;
 
 Player player;
+Screen currentScreen;
 
 void setup() {
   // General setup
@@ -27,15 +31,33 @@ void setup() {
   background(0, 0, 0);
   size(1280, 768);
   imageMode(CENTER);
+  rectMode(CENTER);
   loadBackgrounds();
   loadSprites();
 
   // Create Player
   player = new Player(3, 100, 300, 300);
+  loadMapVals();
+  createMap();
+  currentScreen=map.get(0).get(0);
 }
 
 // Handle key pressed
 void keyPressed() {
+  switch(keyCode) {
+    case UP:
+      changeScreen(Direction.DUP);
+      break;
+    case DOWN:
+      changeScreen(Direction.DDOWN);
+      break;
+    case LEFT:
+      changeScreen(Direction.DLEFT);
+      break;
+    case RIGHT:
+      changeScreen(Direction.DRIGHT);
+      break;
+  }
   switch(gameState) {
     case INTRO:
       break;
@@ -89,7 +111,8 @@ void keyReleased() {
 }
 
 void draw() {
-  background(TL);
-      
+  currentScreen.drawBG(); 
   player.animate();
+  fill(255, 255, 255);
+  text(str(currentScreen.i) + " " + str(currentScreen.j), 500, 500);
 }

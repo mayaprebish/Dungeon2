@@ -1,0 +1,53 @@
+[
+    [
+        {
+            "i": 0,
+            "j": 0,
+            "doorConfig": "BR"
+        },
+        {
+            "i": 0,
+            "j": 1,
+            "doorConfig": "TBR"
+        },
+        {
+            "i": 0,
+            "j": 2,
+            "doorConfig": "T"
+        }
+    ],
+    [
+        {
+            "i": 1,
+            "j": 0,
+            "doorConfig": "LR"
+        },
+        {
+            "i": 1,
+            "j": 1,
+            "doorConfig": "BLR"
+        },
+        {
+            "i": 1,
+            "j": 2,
+            "doorConfig": "TR"
+        }
+    ],
+    [
+        {
+            "i": 2,
+            "j": 0,
+            "doorConfig": "BL"
+        },
+        {
+            "i": 2,
+            "j": 1,
+            "doorConfig": "TBL"
+        },
+        {
+            "i": 2,
+            "j": 2,
+            "doorConfig": "TL"
+        }
+    ]
+]

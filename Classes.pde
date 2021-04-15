@@ -11,24 +11,56 @@ public enum Direction {
     DRIGHT
 }
 
+public enum DoorConfig {
+  T, 
+    B, 
+    L, 
+    R, 
+    TL, 
+    TR, 
+    BL, 
+    BR, 
+    TB, 
+    LR, 
+    TBL, 
+    TBR, 
+    TLR, 
+    BLR, 
+    TBLR
+}
+
 // A Screen is the area of map the player is currently in.
 public class Screen {
+  // Position in map array
+  int i, j;
   // Doors in the current room
   boolean t, b, l, r;
+  public DoorConfig dc;
   PImage background;
+
+  Screen(DoorConfig dc, int i, int j) {
+    this.dc = dc;
+    this.i = i;
+    this.j = j;
+    this.t = topDoor(dc);
+    this.b = bottomDoor(dc);
+    this.l = leftDoor(dc);
+    this.r = rightDoor(dc);
+  }
+
+  boolean isColliding(Creature c) {
+    return collide(this.dc, c.xPos, c.yPos);
+  }
   
-  Screen(boolean top, boolean bottom, boolean left, boolean right) {
-    this.t = top;
-    this.b = bottom;
-    this.l = left;
-    this.r = right;
+  void drawBG() {
+    bg(this.dc);
   }
 }
 
-public class Creature {
+public class Creature { //<>//
   float speed;
   int health;
-  int xPos, yPos;
+  public int xPos, yPos;
   boolean up, down, left, right, run;
   boolean idleU, idleL, idleR;
 
@@ -39,34 +71,54 @@ public class Creature {
     this.yPos = yPos;
   }
 
-  // Walk one step (or two if running) in direction the creature is currently moving
-  void walk() {
-    if (this.left) {
-      if (this.run) {
-        this.xPos -= this.speed * 2;
-      } else {
-        this.xPos -= this.speed;
-      }
-    }
-    if (this.right) {
-      if (this.run) {
-        this.xPos += this.speed * 2;
-      } else {
-        this.xPos += this.speed;
-      }
-    }
+  // Checks if Creature is colliding with the wall
+  boolean isColliding() {
+    DoorConfig dc = currentScreen.dc;
     if (this.up) {
-      if (this.run) {
-        this.yPos -= this.speed * 2;
-      } else {
-        this.yPos -= this.speed;
-      }
+      return collide(dc, this.xPos, this.yPos - (int)this.speed*2); 
     }
     if (this.down) {
-      if (this.run) {
-        this.yPos += this.speed * 2;
-      } else {
-        this.yPos += this.speed;
+      return collide(dc, this.xPos, this.yPos + (int)this.speed*2); 
+    }
+    if (this.left) {
+      return collide(dc, this.xPos - 50, this.yPos);
+    }
+    if (this.right) {
+      return collide(dc, this.xPos + (int)this.speed*2, this.yPos);
+    }
+    return false;
+  }
+
+  // Walk one step (or two if running) in direction the creature is currently moving
+  void walk() {
+    if (!this.isColliding()) {
+      if (this.left) {
+        if (this.run) {
+          this.xPos -= this.speed * 2;
+        } else {
+          this.xPos -= this.speed;
+        }
+      }
+      if (this.right) {
+        if (this.run) {
+          this.xPos += this.speed * 2;
+        } else {
+          this.xPos += this.speed;
+        }
+      }
+      if (this.up) {
+        if (this.run) {
+          this.yPos -= this.speed * 2;
+        } else {
+          this.yPos -= this.speed;
+        }
+      }
+      if (this.down) {
+        if (this.run) {
+          this.yPos += this.speed * 2;
+        } else {
+          this.yPos += this.speed;
+        }
       }
     }
   }
@@ -131,6 +183,8 @@ public class Player extends Creature {
   }
 
   void animate() {
+    stroke(255,255,255);
+    rect(this.xPos, this.yPos, 128, 128);
     if (this.idleU) {
       if (this.up) {
         super.walk();
