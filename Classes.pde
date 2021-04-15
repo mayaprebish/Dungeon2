@@ -81,7 +81,8 @@ public class Creature { //<>//
       return collide(dc, this.xPos, this.yPos + (int)this.speed*2); 
     }
     if (this.left) {
-      return collide(dc, this.xPos - 50, this.yPos);
+      
+      return collide(dc, this.xPos - (int)this.speed*10, this.yPos);
     }
     if (this.right) {
       return collide(dc, this.xPos + (int)this.speed*2, this.yPos);
