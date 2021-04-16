@@ -22,6 +22,9 @@ ArrayList<ArrayList<Screen>> map = new ArrayList<ArrayList<Screen>>();
 JSONArray mapVals;
 int MAPDIM = 3;
 
+int sWidth = 1280;
+int sHeight = 768;
+
 Player player;
 Screen currentScreen;
 
@@ -35,11 +38,13 @@ void setup() {
   loadBackgrounds();
   loadSprites();
 
-  // Create Player
-  player = new Player(3, 100, 300, 300);
+  // Create Map
   loadMapVals();
   createMap();
   currentScreen=map.get(0).get(0);
+  
+  // Create Player
+  player = new Player(64, 3, 100, 300, 300);
 }
 
 // Handle key pressed
@@ -114,5 +119,5 @@ void draw() {
   currentScreen.drawBG(); 
   player.animate();
   fill(255, 255, 255);
-  text(str(currentScreen.i) + " " + str(currentScreen.j), 500, 500);
+  text(str(currentScreen.i) + " " + str(currentScreen.j), 35, 35);
 }
