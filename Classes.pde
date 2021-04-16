@@ -74,20 +74,32 @@ public class Creature { //<>//
   // Checks if Creature is colliding with the wall
   boolean isColliding() {
     DoorConfig dc = currentScreen.dc;
-    if (this.up) {
-      return collide(dc, this.xPos, this.yPos - (int)this.speed*2); 
-    }
-    if (this.down) {
-      return collide(dc, this.xPos, this.yPos + (int)this.speed*2); 
-    }
-    if (this.left) {
-      
-      return collide(dc, this.xPos - (int)this.speed*10, this.yPos);
-    }
-    if (this.right) {
-      return collide(dc, this.xPos + (int)this.speed*2, this.yPos);
-    }
-    return false;
+    //int buffer = (int)this.speed;
+    //if (this.up) {
+    //  if (this.left) {
+    //    return collide(dc, this.xPos - buffer, this.yPos - buffer);
+    //  }
+    //  if (this.right) {
+    //    return collide(dc, this.xPos + buffer, this.yPos - buffer);
+    //  }
+    //  return collide(dc, this.xPos, this.yPos - buffer);
+    //}
+    //if (this.down) {
+    //  if (this.left) {
+    //    return collide(dc, this.xPos - buffer, this.yPos + buffer); 
+    //  }
+    //  if (this.right) {
+    //    return collide(dc, this.xPos + buffer, this.yPos + buffer); 
+    //  }
+    //  return collide(dc, this.xPos, this.yPos + buffer); 
+    //}
+    //if (this.left) {
+    //  return collide(dc, this.xPos - buffer, this.yPos);
+    //}
+    //if (this.right) {
+    //  return collide(dc, this.xPos + buffer, this.yPos);
+    //}
+    //return false;
   }
 
   // Walk one step (or two if running) in direction the creature is currently moving
