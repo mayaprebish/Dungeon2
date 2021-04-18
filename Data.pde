@@ -16,6 +16,92 @@ void createMap() {
   }
 }
 
+
+int mapX = 215;
+int mapY = 159;
+
+void showMap() {
+  fill(209, 192, 155);
+  rectMode(CENTER);
+  rect(sWidth/2, sHeight/2, 1000, 600);
+  
+  rectMode(CORNER);
+  fill(0);
+  textFont(merchant32);
+  text("MAP", mapX + 335, mapY - 33);
+  noFill();
+  stroke(171, 160, 132);
+  for (int i = 0; i < 7; i++) {
+    for (int j = 0; j < 9; j++) {
+      rect((i * 100) + mapX, (j * 50) + mapY, 100, 50);
+    }
+  }
+  
+  drawInk(sWidth - 320, sHeight - 196, 68);
+  drawPen(penColor, 128);
+  
+}
+
+void drawPen(Color c, int size) {
+   switch(c) {
+     case RED:
+       image(quill[1], mouseX, mouseY, size, size);
+       break;
+     case VIOLET:
+       image(quill[2], mouseX, mouseY, size, size);
+       break;
+     case BLUE:
+       image(quill[3], mouseX, mouseY, size, size);
+       break;
+     case GREEN:
+       image(quill[4], mouseX, mouseY, size, size);
+       break;
+     default:
+       image(quill[0], mouseX, mouseY, size, size);
+       break;
+   }
+}
+
+void drawInk(int xPos, int yPos, int size) {
+    image(ink[4], xPos, yPos, size, size);
+    image(ink[3], xPos, yPos - 60, size, size);
+    image(ink[2], xPos, yPos - 120, size, size);
+    image(ink[1], xPos, yPos - 180, size, size);
+}
+
+void changePenColor(Color current, Direction d) {
+   switch(current) {
+      case RED:
+        if (d == Direction.DDOWN) {
+          penColor = Color.VIOLET;
+        } else if (d == Direction.DUP) {
+          penColor = Color.GREEN; 
+        }
+        break;
+      case VIOLET:
+        if (d == Direction.DDOWN) {
+          penColor = Color.BLUE;
+        } else if (d == Direction.DUP) {
+          penColor = Color.RED; 
+        }
+        break;
+      case BLUE:
+        if (d == Direction.DDOWN) {
+          penColor = Color.GREEN;
+        } else if (d == Direction.DUP) {
+          penColor = Color.VIOLET; 
+        }
+        break;
+      case GREEN:
+        if (d == Direction.DDOWN) {
+          penColor = Color.RED;
+        } else if (d == Direction.DUP) {
+          penColor = Color.BLUE; 
+        }
+        break;
+   }
+}
+
 // e.g. 'T' -> DoorConfig.T
 DoorConfig strToDoorConfig(String str) {
   return DoorConfig.valueOf(str);
@@ -57,12 +143,20 @@ void loadSprites() {
   pWalkDownSS = loadImage("WalkDown.png");
   pWalkLeftSS = loadImage("WalkLeft.png");
   pWalkRightSS = loadImage("WalkRight.png");
+  inkSS = loadImage("Ink.png");
+  quillSS = loadImage("Quill.png");
 
   int PIW = pIdleUpSS.width/PID;
   int PIH = pIdleUpSS.height;
 
   int PWW = pWalkUpSS.width/PWD;
   int PWH = pWalkUpSS.height;
+  
+  int IW = inkSS.width/5;
+  int IH = inkSS.height;
+  
+  int QW = quillSS.width/5;
+  int QH = quillSS.height;
 
   // Populate Player sprite animations
   for (int i = 0; i < pIdleUp.length; i++) {
@@ -89,8 +183,14 @@ void loadSprites() {
   for (int i = 0; i < pWalkRight.length; i++) {
     pWalkRight[i] = pWalkRightSS.get(i%PWD*PWW, i/PWH, PWW, PWH);
   }
+  
+  // Populate ink and quills sprites
+  for (int i = 0; i < quill.length; i++) {
+    quill[i] = quillSS.get(i%5*QW, i/QH, QW, QH);
+    ink[i] = inkSS.get(i%5*IW, i/IH, IW, IH);
+  }
 }
-
+//frameCount/DIM%DIM*H;
 // Load backgrounds
 void loadBackgrounds() {
   T = loadImage("T.png");

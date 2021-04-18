@@ -5,6 +5,8 @@ int PWD = 4; // Player Walk spritesheet dimension
 
 PImage pIdleUpSS, pIdleDownSS, pIdleLeftSS, pIdleRightSS;
 PImage pWalkUpSS, pWalkDownSS, pWalkLeftSS, pWalkRightSS; 
+PImage inkSS;
+PImage quillSS;
 
 PImage[] pIdleUp = new PImage[PID];
 PImage[] pIdleDown = new PImage[PID];
@@ -16,6 +18,10 @@ PImage[] pWalkDown = new PImage[PWD];
 PImage[] pWalkLeft = new PImage[PWD];
 PImage[] pWalkRight = new PImage[PWD];
 
+PImage[] ink = new PImage[5];
+PImage[] quill = new PImage[5];
+Color penColor;
+
 // Backgrounds
 PImage T, L, B, R, TL, TB, TR, LR, BL, BR, TLR, TBL, TBR, BLR, TBLR;
 ArrayList<ArrayList<Screen>> map = new ArrayList<ArrayList<Screen>>();
@@ -24,6 +30,11 @@ int MAPDIM = 3;
 
 int sWidth = 1280;
 int sHeight = 768;
+
+boolean showMap;
+
+PFont merchant32;
+PFont merchant24;
 
 Player player;
 Screen currentScreen;
@@ -35,8 +46,13 @@ void setup() {
   size(1280, 768);
   imageMode(CENTER);
   rectMode(CENTER);
+  noCursor();
+  merchant32 = createFont("Merchant Copy.ttf", 32);
+  merchant24 = createFont("Merchant Copy.ttf", 24);
+  textFont(merchant32);
   loadBackgrounds();
   loadSprites();
+  penColor = Color.RED;
 
   // Create Map
   loadMapVals();
@@ -51,17 +67,25 @@ void setup() {
 void keyPressed() {
   switch(keyCode) {
     case UP:
-      changeScreen(Direction.DUP);
+      if (showMap) {
+        changePenColor(penColor, Direction.DUP);
+      } else {
+        changeScreen(Direction.DUP);
+      }
       break;
     case DOWN:
-      changeScreen(Direction.DDOWN);
+      if (showMap) {
+        changePenColor(penColor, Direction.DDOWN);
+      } else {
+        changeScreen(Direction.DDOWN);
+      }
       break;
-    case LEFT:
-      changeScreen(Direction.DLEFT);
-      break;
-    case RIGHT:
-      changeScreen(Direction.DRIGHT);
-      break;
+    //case LEFT:
+    //  changeScreen(Direction.DLEFT);
+    //  break;
+    //case RIGHT:
+    //  changeScreen(Direction.DRIGHT);
+    //  break;
   }
   switch(gameState) {
     case INTRO:
@@ -79,6 +103,9 @@ void keyPressed() {
           break;
         case 'd':
           player.move(Direction.DRIGHT, true);
+          break;
+        case 'm':
+          showMap = !showMap;
           break;
       }
       // if (keyCode == SHIFT) { player.run(true); }
@@ -118,6 +145,12 @@ void keyReleased() {
 void draw() {
   currentScreen.drawBG(); 
   player.animate();
+  
+  if (showMap) {
+    showMap();
+  }
+  
   fill(255, 255, 255);
-  text(str(currentScreen.i) + " " + str(currentScreen.j), 35, 35);
+  //text(str(currentScreen.i) + " " + str(currentScreen.j), 35, 35);
+  text(penColor.name(), 35, 35);
 }

@@ -29,6 +29,13 @@ public enum DoorConfig {
     TBLR
 }
 
+public enum Color {
+  RED,
+  VIOLET,
+  BLUE,
+  GREEN
+}
+
 // A Screen is the area of map the player is currently in.
 public class Screen {
   // Position in map array
