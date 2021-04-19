@@ -33,7 +33,8 @@ public enum Color {
   RED,
   VIOLET,
   BLUE,
-  GREEN
+  GREEN,
+  BLACK
 }
 
 // A Screen is the area of map the player is currently in.
@@ -42,7 +43,7 @@ public class Screen {
   int i, j;
   // Doors in the current room
   boolean t, b, l, r;
-  public DoorConfig dc;
+  DoorConfig dc;
   PImage background;
 
   Screen(DoorConfig dc, int i, int j) {
@@ -58,6 +59,22 @@ public class Screen {
   void drawBG() {
     bg(this.dc);
   }
+}
+
+public class Wall {
+   int xMin, xMax, yMin, yMax;
+   boolean door;
+   
+   Wall(int xMin, int xMax, int yMin, int yMax) {
+     this.xMin = xMin;
+     this.xMax = xMax;
+     this.yMin = yMin;
+     this.yMax = yMax;
+   }
+   
+   void door(boolean d) {
+     this.door = d;
+   }
 }
 
 public class Creature {

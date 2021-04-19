@@ -16,90 +16,125 @@ void createMap() {
   }
 }
 
-
 int mapX = 215;
 int mapY = 159;
 
 void showMap() {
+  int penX = mouseX - 35;
+  int penY = mouseY + 35;
   fill(209, 192, 155);
   rectMode(CENTER);
+  strokeWeight(1);
   rect(sWidth/2, sHeight/2, 1000, 600);
-  
+
   rectMode(CORNER);
   fill(0);
   textFont(merchant32);
-  text("MAP", mapX + 335, mapY - 33);
+  text("MAP", mapX + 390, mapY - 33);
   noFill();
   stroke(171, 160, 132);
-  for (int i = 0; i < 7; i++) {
+  for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 9; j++) {
+      strokeWeight(1);
       rect((i * 100) + mapX, (j * 50) + mapY, 100, 50);
+      if (penColor == Color.BLACK) {
+        if (penX >= i*100 + mapX && penX <= i*100 + mapX + 100 && penY >= j*50 + mapY - 10 && penY <= j*50 + mapY + 10) {
+          strokeWeight(3);
+          line(i*100 + mapX + 40, j*50 + mapY - 5, i*100 + mapX + 40, j*50 + mapY + 5);
+          line(i*100 + mapX + 60, j*50 + mapY - 5, i*100 + mapX + 60, j*50 + mapY + 5);
+          line(i*100 + mapX, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY);
+          line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 100, j*50 + mapY);
+        } else if (penX >= i*100 + mapX - 10 && penX <= i*100 + mapX + 10 && penY >= j*50 + mapY && penY < j*50 + mapY + 50) {
+          strokeWeight(3);
+          line(i*100 + mapX - 5, j*50 + mapY + 15, i*100 + mapX + 5, j*50 + mapY + 15);
+          line(i*100 + mapX - 5, j*50 + mapY + 35, i*100 + mapX + 5, j*50 + mapY + 35);
+          line(i*100 + mapX, j*50 + mapY, i*100 + mapX, j*50 + mapY + 15);
+          line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX, j*50 + mapY + 50);
+        } else if (penX >= i*100 + mapX && penX <= i*100 + mapX + 100 && penY >= j*50 + mapY + 40 && penY <= j*50 + mapY + 60) {
+          strokeWeight(3);
+          line(i*100 + mapX + 40, j*50 + mapY + 45, i*100 + mapX + 40, j*50 + mapY + 55);
+          line(i*100 + mapX + 60, j*50 + mapY + 45, i*100 + mapX + 60, j*50 + mapY + 55);
+          line(i*100 + mapX, j*50 + mapY + 50, i*100 + mapX + 40, j*50 + mapY + 50);
+          line(i*100 + mapX + 60, j*50 + mapY + 50, i*100 + mapX + 100, j*50 + mapY + 50);
+          //line(i*100 + mapX, j*50 + mapY + 50, i*100 + mapX + 100, j*50 + mapY + 50);
+        } else if (penX >= i*100 + mapX + 90 && penX <= i*100 + mapX + 110 && penY >= j*50 + mapY && penY < j*50 + mapY + 50) {
+          strokeWeight(3);
+          line(i*100 + mapX + 95, j*50 + mapY + 15, i*100 + mapX + 105, j*50 + mapY + 15);
+          line(i*100 + mapX + 95, j*50 + mapY + 35, i*100 + mapX + 105, j*50 + mapY + 35);
+          line(i*100 + mapX + 100, j*50 + mapY, i*100 + mapX + 100, j*50 + mapY + 15);
+          line(i*100 + mapX + 100, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 50);
+        }
+      }
     }
   }
-  
-  drawInk(sWidth - 320, sHeight - 196, 68);
+
+  drawInk(sWidth - 220, sHeight - 196, 68);
   drawPen(penColor, 128);
-  
+}
+
+
+
+void editDoor(boolean delete) {
+  if (!delete) {
+  }
 }
 
 void drawPen(Color c, int size) {
-   switch(c) {
-     case RED:
-       image(quill[1], mouseX, mouseY, size, size);
-       break;
-     case VIOLET:
-       image(quill[2], mouseX, mouseY, size, size);
-       break;
-     case BLUE:
-       image(quill[3], mouseX, mouseY, size, size);
-       break;
-     case GREEN:
-       image(quill[4], mouseX, mouseY, size, size);
-       break;
-     default:
-       image(quill[0], mouseX, mouseY, size, size);
-       break;
-   }
+  switch(c) {
+  case RED:
+    image(quill[1], mouseX, mouseY, size, size);
+    break;
+  case VIOLET:
+    image(quill[2], mouseX, mouseY, size, size);
+    break;
+  case BLUE:
+    image(quill[3], mouseX, mouseY, size, size);
+    break;
+  case GREEN:
+    image(quill[4], mouseX, mouseY, size, size);
+    break;
+  case BLACK:
+    image(quill[0], mouseX, mouseY, size, size);
+    break;
+  }
 }
 
 void drawInk(int xPos, int yPos, int size) {
-    image(ink[4], xPos, yPos, size, size);
-    image(ink[3], xPos, yPos - 60, size, size);
-    image(ink[2], xPos, yPos - 120, size, size);
-    image(ink[1], xPos, yPos - 180, size, size);
+  image(ink[4], xPos, yPos, size, size);
+  image(ink[3], xPos, yPos - 60, size, size);
+  image(ink[2], xPos, yPos - 120, size, size);
+  image(ink[1], xPos, yPos - 180, size, size);
+  image(ink[0], xPos, yPos - 400, size, size);
 }
 
-void changePenColor(Color current, Direction d) {
-   switch(current) {
-      case RED:
-        if (d == Direction.DDOWN) {
-          penColor = Color.VIOLET;
-        } else if (d == Direction.DUP) {
-          penColor = Color.GREEN; 
-        }
-        break;
-      case VIOLET:
-        if (d == Direction.DDOWN) {
-          penColor = Color.BLUE;
-        } else if (d == Direction.DUP) {
-          penColor = Color.RED; 
-        }
-        break;
-      case BLUE:
-        if (d == Direction.DDOWN) {
-          penColor = Color.GREEN;
-        } else if (d == Direction.DUP) {
-          penColor = Color.VIOLET; 
-        }
-        break;
-      case GREEN:
-        if (d == Direction.DDOWN) {
-          penColor = Color.RED;
-        } else if (d == Direction.DUP) {
-          penColor = Color.BLUE; 
-        }
-        break;
-   }
+
+/* hitbox = mouse X - 35 -> mouse X - 15 mouse Y + 15 -> mouse X + 35 */
+/* ink hitbox
+ red: x > sWidth - 220 - 34 -> sWidth - 186, x > 
+ 
+ */
+void changePenColor() {
+  int penXMin = mouseX - 35;
+  int penXMax = mouseX - 15;
+  int penYMin = mouseY + 15;
+  int penYMax = mouseY + 35;
+  int inkXMin = sWidth - 254;
+  int inkXMax = sWidth - 186;
+  int inkYPos = sHeight - 196;
+  boolean penX = (penXMin >= inkXMin && penXMax <= inkXMax);
+  if (penX) {
+    if (penYMin >= inkYPos - 214 && penYMax <= inkYPos - 146) {
+      penColor = Color.RED;
+    } else if (penYMin >= inkYPos - 154 && penYMax <= inkYPos - 86) {
+      penColor = Color.VIOLET;
+    } else if (penYMin >= inkYPos - 94 && penYMax <= inkYPos - 26) {
+      penColor = Color.BLUE;
+    } else if (penYMin >= inkYPos - 34 && penYMax <= inkYPos + 46) {
+      penColor = Color.GREEN;
+    } else if (penYMin >= inkYPos - 434 && penYMax <= inkYPos + 366) {
+      penColor = Color.BLACK;
+    }
+  }
 }
 
 // e.g. 'T' -> DoorConfig.T
@@ -151,10 +186,10 @@ void loadSprites() {
 
   int PWW = pWalkUpSS.width/PWD;
   int PWH = pWalkUpSS.height;
-  
+
   int IW = inkSS.width/5;
   int IH = inkSS.height;
-  
+
   int QW = quillSS.width/5;
   int QH = quillSS.height;
 
@@ -183,7 +218,7 @@ void loadSprites() {
   for (int i = 0; i < pWalkRight.length; i++) {
     pWalkRight[i] = pWalkRightSS.get(i%PWD*PWW, i/PWH, PWW, PWH);
   }
-  
+
   // Populate ink and quills sprites
   for (int i = 0; i < quill.length; i++) {
     quill[i] = quillSS.get(i%5*QW, i/QH, QW, QH);

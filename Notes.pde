@@ -16,6 +16,42 @@ map margins = 75
 map xMin = 140 + 75 = 215
 map yMin = 84 + 75 = 159
 */
+
+/*void changePenColor(Color current, Direction d) {
+   switch(current) {
+      case RED:
+        if (d == Direction.DDOWN) {
+          penColor = Color.VIOLET;
+        } else if (d == Direction.DUP) {
+          penColor = Color.GREEN; 
+        }
+        break;
+      case VIOLET:
+        if (d == Direction.DDOWN) {
+          penColor = Color.BLUE;
+        } else if (d == Direction.DUP) {
+          penColor = Color.RED; 
+        }
+        break;
+      case BLUE:
+        if (d == Direction.DDOWN) {
+          penColor = Color.GREEN;
+        } else if (d == Direction.DUP) {
+          penColor = Color.VIOLET; 
+        }
+        break;
+      case GREEN:
+        if (d == Direction.DDOWN) {
+          penColor = Color.RED;
+        } else if (d == Direction.DUP) {
+          penColor = Color.BLUE; 
+        }
+        break;
+   }
+}
+
+
+*/
   
   //switch(c) {
   //  case RED:
