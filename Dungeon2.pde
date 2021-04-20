@@ -69,13 +69,6 @@ void setup() {
 
 // Handle key pressed
 void keyPressed() {
-
-  //case LEFT:
-  //  changeScreen(Direction.DLEFT);
-  //  break;
-  //case RIGHT:
-  //  changeScreen(Direction.DRIGHT);
-  //  break;
   switch(gameState) {
   case INTRO:
     break;
@@ -154,8 +147,4 @@ void draw() {
   if (showMap) {
     showMap();
   }
-
-  fill(255, 255, 255);
-  //text(str(currentScreen.i) + " " + str(currentScreen.j), 35, 35);
-  text(penColor.name(), 35, 35);
 }
