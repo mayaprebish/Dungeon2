@@ -26,15 +26,16 @@ public enum DoorConfig {
     TBR, 
     TLR, 
     BLR, 
-    TBLR
+    TBLR, 
+    None
 }
 
 public enum Color {
-  RED,
-  VIOLET,
-  BLUE,
-  GREEN,
-  BLACK
+  RED, 
+    VIOLET, 
+    BLUE, 
+    GREEN, 
+    BLACK
 }
 
 // A Screen is the area of map the player is currently in.
@@ -61,20 +62,46 @@ public class Screen {
   }
 }
 
-public class Wall {
-   int xMin, xMax, yMin, yMax;
-   boolean door;
-   
-   Wall(int xMin, int xMax, int yMin, int yMax) {
-     this.xMin = xMin;
-     this.xMax = xMax;
-     this.yMin = yMin;
-     this.yMax = yMax;
-   }
-   
-   void door(boolean d) {
-     this.door = d;
-   }
+// Represents a single cell on the map
+public class Cell {
+  DoorConfig dc;
+  boolean t, b, l, r;
+  int i;
+  int j;
+
+  Cell(int i, int j) {
+    this.i = i;
+    this.j = j;
+    this.dc = DoorConfig.None;
+    //dungeon.get(i).get(j).dc;
+    //this.t = true;
+    //this.l = true;
+    //this.b = true;
+    //this.r = true;
+  }
+
+  void setDoors(DoorConfig config) {
+    this.dc = config;
+  }
+
+  void editDoor(Direction d) {
+    this.dc = doorToConfig(this.dc, d); 
+    this.t = topDoor(dc);
+    this.b = bottomDoor(dc);
+    this.l = leftDoor(dc);
+    this.r = rightDoor(dc);
+  }
+
+  void drawCell() {
+    noFill();
+    stroke(171, 160, 132);
+    strokeWeight(1);
+    rect((i * 100) + mapX, (j * 50) + mapY, 100, 50);
+    
+    strokeWeight(3);
+    drawPath(this.i, this.j, this.dc);
+
+  }
 }
 
 public class Creature {
@@ -272,7 +299,7 @@ public class Player extends Creature {
         this.drawFrame(this.walkDown[frameCount/walkFrameInterval % this.walkDown.length]);
       } else if (this.left) {
         this.drawFrame(this.walkLeft[frameCount/walkFrameInterval % this.walkLeft.length]);
-      } else if (this.right) {
+      } else if (this.right) { 
         this.drawFrame(this.walkRight[frameCount/walkFrameInterval % this.walkRight.length]);
       }
     }

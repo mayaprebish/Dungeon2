@@ -24,9 +24,11 @@ Color penColor;
 
 // Backgrounds
 PImage T, L, B, R, TL, TB, TR, LR, BL, BR, TLR, TBL, TBR, BLR, TBLR;
-ArrayList<ArrayList<Screen>> map = new ArrayList<ArrayList<Screen>>();
+ArrayList<ArrayList<Screen>> dungeon = new ArrayList<ArrayList<Screen>>();
+ArrayList<ArrayList<Cell>> map = new ArrayList<ArrayList<Cell>>();
 JSONArray mapVals;
-int MAPDIM = 3;
+int MAPX = 8;
+int MAPY = 9;
 int[][] mapDoors = new int[9][10];
 
 int sWidth = 1280;
@@ -57,8 +59,9 @@ void setup() {
 
   // Create Map
   loadMapVals();
+  createDungeon();
   createMap();
-  currentScreen=map.get(0).get(0);
+  currentScreen=dungeon.get(0).get(0);
 
   // Create Player
   player = new Player(64, 3, 100, 300, 300);
@@ -133,7 +136,11 @@ void mouseClicked() {
   case INTRO:
     break;
   case START:
-    changePenColor();
+    if (showMap) {
+      changePenColor();
+      editDoors();
+    }
+    
     break;
   case GAMEOVER:
     break;

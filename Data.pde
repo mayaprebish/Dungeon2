@@ -3,21 +3,45 @@ void loadMapVals() {
   mapVals = loadJSONArray("Map.json");
 }
 
-// Draw map
-void createMap() {
-  for (int i = 0; i < MAPDIM; i++) {
+// Create the screens in the dungeon
+void createDungeon() {
+  for (int i = 0; i < MAPX; i++) {
     ArrayList<Screen> row = new ArrayList<Screen>();
     JSONArray mapRow = mapVals.getJSONArray(i);
-    for (int j = 0; j < MAPDIM; j++) {
+    for (int j = 0; j < MAPY; j++) {
       JSONObject screen = mapRow.getJSONObject(j);
       row.add(new Screen(strToDoorConfig(screen.getString("doorConfig")), screen.getInt("i"), screen.getInt("j")));
+    }
+    dungeon.add(row);
+  }
+}
+
+// Create the cells on the map
+void createMap() {
+  for (int i = 0; i < 8; i++) {
+    ArrayList<Cell> row = new ArrayList<Cell>();
+    for (int j = 0; j < 9; j++) {
+      row.add(new Cell(i, j));
     }
     map.add(row);
   }
 }
 
+/*
+- figure out what wall the mouse is on and which cell/cells it belongs to
+ - if on the very top, bottom , right or left, only one cell gets a new door
+ - otherwise two cells get a new door
+ 
+ */
+
+// Represents the top/left edges of the map grid
 int mapX = 215;
 int mapY = 159;
+
+// Draw a door on the map
+void drawDoor() {
+}
+
 
 void showMap() {
   int penX = mouseX - 35;
@@ -28,41 +52,23 @@ void showMap() {
   rect(sWidth/2, sHeight/2, 1000, 600);
 
   rectMode(CORNER);
-  fill(0);
-  textFont(merchant32);
-  text("MAP", mapX + 390, mapY - 33);
   noFill();
   stroke(171, 160, 132);
   for (int i = 0; i < 8; i++) {
     for (int j = 0; j < 9; j++) {
-      strokeWeight(1);
-      rect((i * 100) + mapX, (j * 50) + mapY, 100, 50);
+      Cell currentCell = map.get(i).get(j);
+      currentCell.drawCell();
+      stroke(171, 160, 132);
       if (penColor == Color.BLACK) {
-        if (penX >= i*100 + mapX && penX <= i*100 + mapX + 100 && penY >= j*50 + mapY - 10 && penY <= j*50 + mapY + 10) {
+        if (penX > mapX + 10 && penY > mapY + 10) {
           strokeWeight(3);
-          line(i*100 + mapX + 40, j*50 + mapY - 5, i*100 + mapX + 40, j*50 + mapY + 5);
-          line(i*100 + mapX + 60, j*50 + mapY - 5, i*100 + mapX + 60, j*50 + mapY + 5);
-          line(i*100 + mapX, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY);
-          line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 100, j*50 + mapY);
-        } else if (penX >= i*100 + mapX - 10 && penX <= i*100 + mapX + 10 && penY >= j*50 + mapY && penY < j*50 + mapY + 50) {
-          strokeWeight(3);
-          line(i*100 + mapX - 5, j*50 + mapY + 15, i*100 + mapX + 5, j*50 + mapY + 15);
-          line(i*100 + mapX - 5, j*50 + mapY + 35, i*100 + mapX + 5, j*50 + mapY + 35);
-          line(i*100 + mapX, j*50 + mapY, i*100 + mapX, j*50 + mapY + 15);
-          line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX, j*50 + mapY + 50);
-        } else if (penX >= i*100 + mapX && penX <= i*100 + mapX + 100 && penY >= j*50 + mapY + 40 && penY <= j*50 + mapY + 60) {
-          strokeWeight(3);
-          line(i*100 + mapX + 40, j*50 + mapY + 45, i*100 + mapX + 40, j*50 + mapY + 55);
-          line(i*100 + mapX + 60, j*50 + mapY + 45, i*100 + mapX + 60, j*50 + mapY + 55);
-          line(i*100 + mapX, j*50 + mapY + 50, i*100 + mapX + 40, j*50 + mapY + 50);
-          line(i*100 + mapX + 60, j*50 + mapY + 50, i*100 + mapX + 100, j*50 + mapY + 50);
-          //line(i*100 + mapX, j*50 + mapY + 50, i*100 + mapX + 100, j*50 + mapY + 50);
-        } else if (penX >= i*100 + mapX + 90 && penX <= i*100 + mapX + 110 && penY >= j*50 + mapY && penY < j*50 + mapY + 50) {
-          strokeWeight(3);
-          line(i*100 + mapX + 95, j*50 + mapY + 15, i*100 + mapX + 105, j*50 + mapY + 15);
-          line(i*100 + mapX + 95, j*50 + mapY + 35, i*100 + mapX + 105, j*50 + mapY + 35);
-          line(i*100 + mapX + 100, j*50 + mapY, i*100 + mapX + 100, j*50 + mapY + 15);
-          line(i*100 + mapX + 100, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 50);
+          if (penX >= i*100 + mapX && penX <= i*100 + mapX + 100 && penY >= j*50 + mapY - 10 && penY <= j*50 + mapY + 10) {
+            line(i*100 + mapX + 40, j*50 + mapY - 5, i*100 + mapX + 40, j*50 + mapY + 5);
+            line(i*100 + mapX + 60, j*50 + mapY - 5, i*100 + mapX + 60, j*50 + mapY + 5);
+          } else if (penX >= i*100 + mapX - 10 && penX <= i*100 + mapX + 10 && penY >= j*50 + mapY && penY < j*50 + mapY + 50) {
+            line(i*100 + mapX - 5, j*50 + mapY + 15, i*100 + mapX + 5, j*50 + mapY + 15);
+            line(i*100 + mapX - 5, j*50 + mapY + 35, i*100 + mapX + 5, j*50 + mapY + 35);
+          }
         }
       }
     }
@@ -70,12 +76,29 @@ void showMap() {
 
   drawInk(sWidth - 220, sHeight - 196, 68);
   drawPen(penColor, 128);
+
+  fill(0);
+  textFont(merchant32);
+  text(str(penX - mapX) + ", " + str(penY - mapY), mapX, mapY - 20);
 }
 
-
-
-void editDoor(boolean delete) {
-  if (!delete) {
+void editDoors() {
+  int penX = mouseX - 35;
+  int penY = mouseY + 35;
+  for (int i = 0; i < 8; i++) {
+    for (int j = 0; j < 9; j++) {
+      if (penColor == Color.BLACK) {
+        if (penX > mapX + 10 && penY > mapY + 10) {
+          if (penX >= i*100 + mapX && penX <= i*100 + mapX + 100 && penY >= j*50 + mapY - 10 && penY <= j*50 + mapY + 10) {
+            map.get(i).get(j-1).editDoor(Direction.DDOWN);
+            map.get(i).get(j).editDoor(Direction.DUP);
+          } else if (penX >= i*100 + mapX - 10 && penX <= i*100 + mapX + 10 && penY >= j*50 + mapY && penY < j*50 + mapY + 50) {
+            map.get(i-1).get(j).editDoor(Direction.DRIGHT);
+            map.get(i).get(j).editDoor(Direction.DLEFT);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -147,22 +170,22 @@ void changeScreen(Direction d) {
   switch(d) {
   case DUP:
     if (currentScreen.j > 0) {
-      currentScreen = map.get(currentScreen.i).get(currentScreen.j - 1);
+      currentScreen = dungeon.get(currentScreen.i).get(currentScreen.j - 1);
     }
     break;
   case DDOWN:
-    if (currentScreen.j < MAPDIM - 1) {
-      currentScreen = map.get(currentScreen.i).get(currentScreen.j + 1);
+    if (currentScreen.j < MAPY - 1) {
+      currentScreen = dungeon.get(currentScreen.i).get(currentScreen.j + 1);
     }
     break;
   case DLEFT:
     if (currentScreen.i > 0) {
-      currentScreen = map.get(currentScreen.i - 1).get(currentScreen.j);
+      currentScreen = dungeon.get(currentScreen.i - 1).get(currentScreen.j);
     }
     break;
   case DRIGHT:
-    if (currentScreen.i < MAPDIM - 1) {
-      currentScreen = map.get(currentScreen.i + 1).get(currentScreen.j);
+    if (currentScreen.i < MAPX - 1) {
+      currentScreen = dungeon.get(currentScreen.i + 1).get(currentScreen.j);
     }
     break;
   }
@@ -245,6 +268,8 @@ void loadBackgrounds() {
   TBLR = loadImage("TBLR.png");
 }
 
+
+
 // Assign doors
 boolean topDoor(DoorConfig dc) {
   return (dc == DoorConfig.T || dc == DoorConfig.TL || dc == DoorConfig.TB ||
@@ -268,6 +293,103 @@ boolean rightDoor(DoorConfig dc) {
   return (dc == DoorConfig.R || dc == DoorConfig.TR || dc == DoorConfig.BR ||
     dc == DoorConfig.LR || dc == DoorConfig.TBR || dc == DoorConfig.BLR ||
     dc == DoorConfig.TLR || dc == DoorConfig.TBLR);
+}
+
+void drawPath(int i, int j, DoorConfig dc) {
+  switch(dc) {
+  case None:
+    break;
+  case T:
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 35);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 35);
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 35);
+    break;
+  case B:
+    line(i*100 + mapX + 40, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 60, j*50 + mapY + 50);
+    line(i*100 + mapX + 40, j*50 + mapY + 15, i*100 + mapX + 60, j*50 + mapY + 15);
+    break;
+  case L:
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 60, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 35);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 60, j*50 + mapY + 35);
+    break;
+  case R:
+    line(i*100 + mapX + 40, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    line(i*100 + mapX + 40, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 35);
+    break;
+  case TL:
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 35);
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 35);
+    break;
+  case TB:
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 50);
+    break;
+  case TR:
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 35);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    break;
+  case BL:
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 60, j*50 + mapY + 50);
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 60, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 35);
+    break;
+  case BR:
+    line(i*100 + mapX + 40, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 50);
+    line(i*100 + mapX + 40, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    break;
+  case LR:
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    break;
+  case TLR:
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    break;
+  case TBL:
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 50);
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 35);
+    break;
+  case TBR:
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 50);
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    break;
+  case BLR:
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 35);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 50);
+    break;
+  case TBLR:
+    line(i*100 + mapX, j*50 + mapY + 15, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY + 15, i*100 + mapX + 100, j*50 + mapY + 15);
+    line(i*100 + mapX, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 35);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 100, j*50 + mapY + 35);
+    line(i*100 + mapX + 40, j*50 + mapY, i*100 + mapX + 40, j*50 + mapY + 15);
+    line(i*100 + mapX + 60, j*50 + mapY, i*100 + mapX + 60, j*50 + mapY + 15);
+    line(i*100 + mapX + 40, j*50 + mapY + 35, i*100 + mapX + 40, j*50 + mapY + 50);
+    line(i*100 + mapX + 60, j*50 + mapY + 35, i*100 + mapX + 60, j*50 + mapY + 50);
+    break;
+  }
 }
 
 boolean collide(DoorConfig dc, int xMin, int xMax, int yMin, int yMax) {
@@ -449,5 +571,188 @@ void bg(DoorConfig dc) {
   case TBLR:
     background(TBLR);
     break;
+  }
+}
+
+DoorConfig doorToConfig(DoorConfig dc, Direction d) {
+  switch(dc) {
+  case None:
+    switch(d) {
+    case DUP:
+      return DoorConfig.T;
+    case DDOWN:
+      return DoorConfig.B;
+    case DLEFT:
+      return DoorConfig.L;
+    case DRIGHT:
+      return DoorConfig.R;
+    }
+  case T:
+    switch(d) {
+    case DUP:
+      return DoorConfig.None;
+    case DDOWN:
+      return DoorConfig.TB;
+    case DLEFT:
+      return DoorConfig.TL;
+    case DRIGHT:
+      return DoorConfig.TR;
+    }
+  case B:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TB;
+    case DDOWN:
+      return DoorConfig.None;
+    case DLEFT:
+      return DoorConfig.BL;
+    case DRIGHT:
+      return DoorConfig.BR;
+    }
+  case L:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TL;
+    case DDOWN:
+      return DoorConfig.BL;
+    case DLEFT:
+      return DoorConfig.None;
+    case DRIGHT:
+      return DoorConfig.LR;
+    }
+  case R:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TR;
+    case DDOWN:
+      return DoorConfig.BR;
+    case DLEFT:
+      return DoorConfig.LR;
+    case DRIGHT:
+      return DoorConfig.None;
+    }
+  case TL:
+    switch(d) {
+    case DUP:
+      return DoorConfig.L;
+    case DDOWN:
+      return DoorConfig.TBL;
+    case DLEFT:
+      return DoorConfig.T;
+    case DRIGHT:
+      return DoorConfig.TLR;
+    }
+  case TB:
+    switch(d) {
+    case DUP:
+      return DoorConfig.B;
+    case DDOWN:
+      return DoorConfig.T;
+    case DLEFT:
+      return DoorConfig.TBL;
+    case DRIGHT:
+      return DoorConfig.TBR;
+    }
+  case TR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.R;
+    case DDOWN:
+      return DoorConfig.TBR;
+    case DLEFT:
+      return DoorConfig.TLR;
+    case DRIGHT:
+      return DoorConfig.T;
+    }
+  case BL:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TBL;
+    case DDOWN:
+      return DoorConfig.L;
+    case DLEFT:
+      return DoorConfig.B;
+    case DRIGHT:
+      return DoorConfig.BLR;
+    }
+  case BR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TBR;
+    case DDOWN:
+      return DoorConfig.R;
+    case DLEFT:
+      return DoorConfig.BLR;
+    case DRIGHT:
+      return DoorConfig.B;
+    }
+  case LR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TLR;
+    case DDOWN:
+      return DoorConfig.BLR;
+    case DLEFT:
+      return DoorConfig.R;
+    case DRIGHT:
+      return DoorConfig.L;
+    }
+  case TLR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.LR;
+    case DDOWN:
+      return DoorConfig.TBLR;
+    case DLEFT:
+      return DoorConfig.TR;
+    case DRIGHT:
+      return DoorConfig.TL;
+    }
+  case TBL:
+    switch(d) {
+    case DUP:
+      return DoorConfig.BL;
+    case DDOWN:
+      return DoorConfig.TL;
+    case DLEFT:
+      return DoorConfig.TB;
+    case DRIGHT:
+      return DoorConfig.TBLR;
+    }
+  case TBR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.BR;
+    case DDOWN:
+      return DoorConfig.TR;
+    case DLEFT:
+      return DoorConfig.TBLR;
+    case DRIGHT:
+      return DoorConfig.TB;
+    }
+  case BLR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.TBLR;
+    case DDOWN:
+      return DoorConfig.LR;
+    case DLEFT:
+      return DoorConfig.BR;
+    case DRIGHT:
+      return DoorConfig.BL;
+    }
+  case TBLR:
+    switch(d) {
+    case DUP:
+      return DoorConfig.BLR;
+    case DDOWN:
+      return DoorConfig.TLR;
+    case DLEFT:
+      return DoorConfig.TBR;
+    case DRIGHT:
+      return DoorConfig.TBL;
+    }
+  default:
+    return DoorConfig.None;
   }
 }
